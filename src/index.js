@@ -9,17 +9,17 @@ import './css/login.css';
 import registerServiceWorker from './registerServiceWorker';
 import Logout from './components/Logout';
 
-function isAuthenticated(next, replace) {
-    return localStorage.getItem('auth-token') != null
+function isAuthenticated(props) {
+    return props.match.params.login || localStorage.getItem('auth-token') !== null
 }
 
 ReactDOM.render(
     <Router>
         <Switch>
             <Route exact path="/" component={Login} />
-            <Route path="/timeline" render={() => (
-                isAuthenticated() ? (
-                    <App />
+            <Route path="/timeline/:login?" render={props => (
+                isAuthenticated(props) ? (
+                    <App match={props.match} />
                 ) : (
                     <Redirect to="/" />
                 )
