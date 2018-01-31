@@ -1,13 +1,25 @@
 import React, { Component } from 'react';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 class FotoAtualizacoes extends Component {
+
+    likeAction = (e) => {
+        e.preventDefault();
+        this.props.doLike(this.props.foto.id);
+    }
+
+    commentAction = (e) => {
+        e.preventDefault();
+        this.props.doComment(this.props.foto.id, this.comment.value);
+        this.comment.value = '';
+    }
+
     render() {
         return (
             <section className="fotoAtualizacoes">
-                <a href="#" className="fotoAtualizacoes-like">Likar</a>
-                <form className="fotoAtualizacoes-form">
-                    <input type="text" placeholder="Adicione um comentário..." className="fotoAtualizacoes-form-campo" />
+                <a onClick={this.likeAction} className={this.props.foto.likeada ? 'fotoAtualizacoes-like-ativo' : 'fotoAtualizacoes-like'}>Likar</a>
+                <form className="fotoAtualizacoes-form" onSubmit={this.commentAction}>
+                    <input type="text" placeholder="Adicione um comentário..." className="fotoAtualizacoes-form-campo" ref={input => this.comment = input} />
                     <input type="submit" value="Comentar!" className="fotoAtualizacoes-form-submit" />
                 </form>
 
@@ -17,12 +29,13 @@ class FotoAtualizacoes extends Component {
 }
 
 class FotoInfo extends Component {
+
     render() {
         return (
             <div className="foto-in fo">
                 <div className="foto-info-likes">
                     {
-                        this.props.foto.likers.map(liker => <Link key={liker.login} to={`/timeline/${liker.login}`}>{liker.login}</Link>)
+                        this.props.foto.likers.map(liker => <Link key={liker.login} to={`/timeline/${liker.login}`}> {liker.login}</Link>)
                     }
                     curtiram
 
@@ -75,7 +88,7 @@ export default class FotoItem extends Component {
                 <FotoHeader foto={this.props.foto} />
                 <img alt="foto" className="foto-src" src={this.props.foto.urlFoto} />
                 <FotoInfo foto={this.props.foto} />
-                <FotoAtualizacoes />
+                <FotoAtualizacoes {...this.props} />
             </div>
         );
     }

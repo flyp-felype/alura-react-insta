@@ -1,6 +1,31 @@
 import React, { Component } from 'react';
+import PubSub from 'pubsub-js';
 
 export default class Header extends Component {
+
+    constructor() {
+        super();
+        this.state = { search: '' };
+    }
+
+    setSearch = (e) => {
+        this.setState({ search: e.target.value });
+    }
+
+    searchAction = (e) => {
+        e.preventDefault();
+        fetch(`http://localhost:8080/api/public/fotos/${this.state.search}`)
+            .then(resp => {
+                if (resp.ok)
+                    return resp.json();
+                else
+                    throw new Error('Usuário pesquisado não existe!');
+            })
+            .then(fotos => {
+                this.setState({ search: '' });
+                PubSub.publish('timeline', { fotos });
+            });
+    }
 
     render() {
         return (
@@ -9,8 +34,8 @@ export default class Header extends Component {
                     Instalura
           </h1>
 
-                <form className="header-busca">
-                    <input type="text" name="search" placeholder="Pesquisa" className="header-busca-campo" />
+                <form className="header-busca" onSubmit={this.searchAction}>
+                    <input type="text" name="search" placeholder="Pesquisa" className="header-busca-campo" value={this.state.search} onChange={this.setSearch} />
                     <input type="submit" value="Buscar" className="header-busca-submit" />
                 </form>
 
