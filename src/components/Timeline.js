@@ -29,12 +29,12 @@ export default class Timeline extends Component {
             const selectedFoto = this.state.fotos.find(foto => foto.id === info.fotoId);
             selectedFoto.likeada = !selectedFoto.likeada;
 
-            let liker = selectedFoto.likers.find(liker => liker.login === info.liker.login);
+            const liker = selectedFoto.likers.find(liker => liker.login === info.liker.login);
 
             if (liker) {
                 selectedFoto.likers = selectedFoto.likers.filter(oldLikers => oldLikers.login !== info.liker.login);
             } else {
-                selectedFoto.likers = selectedFoto.likers.push(info.liker);
+                selectedFoto.likers.push(info.liker);
             }
             this.setState({ fotos: this.state.fotos });
         });
