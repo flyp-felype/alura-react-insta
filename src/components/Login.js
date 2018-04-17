@@ -23,10 +23,17 @@ export default class Login extends Component {
             }
 
             const response = await fetch('http://localhost:8080/api/public/login', requestInfo);
-            const responseJson = response.json;
-            localStorage.setItem('auth-token', responseJson);
-            this.setState({ logged: true })
-
+            if(response.OK)
+            {
+                const responseJson = response.json;
+                localStorage.setItem('auth-token', responseJson);
+                this.setState({ logged: true })
+    
+            }
+            else{
+                console.log("error");
+            }
+            
         } catch (error) {
             this.setState({ error })
         }
@@ -36,7 +43,8 @@ export default class Login extends Component {
         event.preventDefault();
 
         this.setState({ error: '' });
-        postLogin();
+        
+        this.postLogin();
     };
 
 
